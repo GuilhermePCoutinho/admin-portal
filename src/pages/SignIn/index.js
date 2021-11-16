@@ -1,45 +1,121 @@
-import { useState } from "react";
-import { ToastContainer } from "react-toastify";
+import { useEffect, useState } from 'react';
+import { ToastContainer } from 'react-toastify';
+import Lottie from 'react-lottie';
 
-import { Container, Form, Input, Button } from "./styles";
-import api from "../../services/api"
-import SigninValidation from "../../utils/validation/SigninValidation";
-import Message from "../../components/Message";
+import { 
+  Container, 
+  Form, 
+  Input, 
+  Button,
+  Image,
+  Animation,
+  Signup,
+  Span,
+  ForgotPassword
+} from './styles';
+import api from '../../services/api';
+import SigninValidation from '../../utils/validation/SigninValidation';
+import Message from '../../components/Message';
 
+import checkAnimation from '../../assets/animations/9953-loading-round.json';
+import Logo from '../../assets/images/logo-overstack-novo.png';
 
 function SignIn() {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
-    async function HandleSubmit() {
-        const data = { email, password };
-
-        let validation = await SigninValidation(data);
-
-        if (validation) {
-            await api.post("/signin", data)
-                .then(response => {
-                    Message(response);
-                })
-                .catch(error => {
-                    Message(error.response.data.message)
-                })
-
-        }else {
-            Message ("Preencha um email válido e uma senha de no mínimo 6 caracteres!", "error")
-        }
-
+  const defaultOptions = {
+    loop: true,
+    autoplay: true, 
+    animationData: checkAnimation,
+    rendererSettings: {
+      preserveAspectRatio: 'xMidYMid slice'
     }
-    return (
-        <Container>
-            <Form>
-                <ToastContainer />
-                <Input type="email" placeholder="E-mail" onChange={(e) => setEmail(e.target.value)} required />
-                <Input type="password" placeholder="Senha" onChange={(e) => setPassword(e.target.value)} required />
-                <Button onClick={HandleSubmit}>Entrar</Button>
-            </Form>
-        </Container>
-    )
+  };
+
+  async function HandleSubmit() {
+    setLoading(true);
+    const data = { email, password };
+
+    let validation = await SigninValidation(data);
+
+    if(validation) {
+      await api.post('/signin', data)
+      .then(response => {
+        localStorage.setItem("over_name", response.data.user.name);
+        localStorage.setItem("over_token", response.data.token);
+        Message(response);
+        setTimeout(() => {
+          setLoading(false);
+          handleAuthenticated()
+        }, 2000);
+      })
+      .catch(error =>  {
+        Message(error.response.data.message)
+        setTimeout(() => {
+          setLoading(false);
+        }, 2000);
+      })
+    } else {
+      Message("Preencha um email válido e uma senha de no mínimo 6 caracteres!")
+      setTimeout(() => {
+        setLoading(false);
+      }, 2000);
+    }   
+  }
+
+  async function handleAuthenticated() {
+    let token = await localStorage.getItem("over_token");
+
+    if(token) {
+      window.location = "/";
+    }
+  }
+
+  useEffect(() => {
+    handleAuthenticated();
+  }, [])
+
+  return(
+    <Container>
+      <Form>
+        <ToastContainer />
+        <Image 
+          src={Logo} 
+          alt="Logo Overstack"
+        />
+        <Input 
+          type="email" 
+          placeholder="E-mail" 
+          onChange={(e) => setEmail(e.target.value)} 
+          required
+        />
+        <Input 
+          type="password" 
+          placeholder="Senha" 
+          onChange={(e) => setPassword(e.target.value)} 
+          required
+        />
+        <ForgotPassword href="/forgot-password">
+          Esqueceu sua senha? 
+        </ForgotPassword>
+        <Button 
+          onClick={HandleSubmit}
+        >
+          { loading ? 
+            <Animation>
+              <Lottie options={defaultOptions}/>
+            </Animation>
+              
+            : 
+              "Entrar"
+            }
+        </Button>
+        <Signup href="/signup">Ainda não tem cadastro? <Span>Cadastra-se!</Span></Signup>
+      </Form>
+    </Container>
+  )
 }
 
 export default SignIn;

@@ -50,8 +50,8 @@ export const Button = styled.button`
 
 export const Image = styled.img`
   width: 200px;
-  margin: 30px auto;
   cursor: pointer;
+  margin-bottom: 30px;
 `;
 
 export const Animation = styled.div`
@@ -60,9 +60,9 @@ export const Animation = styled.div`
   margin: auto;
 `
 
-export const Signup = styled.a`
+export const SignIn = styled.a`
   text-align: center;
-  max-width: 200px;
+  max-width: 173px;
   color: var(--color-primary);
   margin: 20px auto;
   cursor: pointer;
@@ -75,12 +75,26 @@ export const Span = styled.span`
   text-decoration: underline;
 `
 
-export const ForgotPassword = styled.a`
-  color: var(--color-primary);
-  cursor: pointer;
-  text-decoration: none;
-  line-height: 25px;
-  display: flex;
-  justify-content: flex-end;
+export const Title = styled.h1`
+  color: var(--color-white);
   margin-bottom: 30px;
+  font-size: 24px;
+  font-weight: 400;
+`
+
+export const AnimationContainer = styled.div`
+  width: 20%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`
+
+export const TitleAnimation = styled.h1`
+  color: var(--color-white);
+`
+
+export const RedirectLogin = styled.a`
+  color: var(--color-primary);
+  margin: 30px 0;
 `

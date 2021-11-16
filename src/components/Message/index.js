@@ -1,5 +1,5 @@
 import { toast } from "react-toastify";
-import "react-toastify/dist/react-toastify.css";
+import "react-toastify/dist/ReactToastify.css";
 
 function Message(message, type) {
     switch (type) {
