@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Routes from './routes/index';
-import { GlobalStyle } from "./styles/global";
+import Routes from './routes';
+import { GlobalStyle } from './styles/global';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -11,5 +11,4 @@ ReactDOM.render(
     </>
   </React.StrictMode>,
   document.getElementById('root')
-
 );
